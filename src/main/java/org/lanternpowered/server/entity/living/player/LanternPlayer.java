@@ -28,9 +28,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Sets;
 import org.lanternpowered.server.command.AbstractCommandSource;
 import org.lanternpowered.server.effect.AbstractViewer;
-import org.lanternpowered.server.entity.LanternEntityHumanoid;
+import org.lanternpowered.server.entity.living.LanternEntityHumanoid;
 import org.lanternpowered.server.game.LanternGame;
 import org.lanternpowered.server.network.message.codec.object.LocalizedText;
 import org.lanternpowered.server.network.session.Session;
@@ -42,10 +43,28 @@ import org.lanternpowered.server.permission.AbstractSubject;
 import org.lanternpowered.server.profile.LanternGameProfile;
 import org.lanternpowered.server.text.title.LanternTitles;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.MemoryDataContainer;
 import org.spongepowered.api.data.type.SkinPart;
 import org.spongepowered.api.data.type.SkinParts;
+import org.spongepowered.api.data.DataHolder;
+import org.spongepowered.api.data.manipulator.mutable.entity.AchievementData;
+import org.spongepowered.api.data.manipulator.mutable.entity.ExperienceHolderData;
+import org.spongepowered.api.data.manipulator.mutable.entity.FlyingAbilityData;
+import org.spongepowered.api.data.manipulator.mutable.entity.FlyingData;
+import org.spongepowered.api.data.manipulator.mutable.entity.FoodData;
+import org.spongepowered.api.data.manipulator.mutable.entity.GameModeData;
+import org.spongepowered.api.data.manipulator.mutable.entity.HealthScalingData;
+import org.spongepowered.api.data.manipulator.mutable.entity.JoinData;
+import org.spongepowered.api.data.manipulator.mutable.entity.MovementSpeedData;
+import org.spongepowered.api.data.manipulator.mutable.entity.SkinData;
+import org.spongepowered.api.data.manipulator.mutable.entity.SleepingData;
+import org.spongepowered.api.data.manipulator.mutable.entity.SneakingData;
+import org.spongepowered.api.data.manipulator.mutable.entity.SprintData;
+import org.spongepowered.api.data.manipulator.mutable.entity.StatisticData;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.sound.SoundType;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.tab.TabList;
@@ -73,6 +92,24 @@ import javax.annotation.Nullable;
 
 @NonnullByDefault
 public class LanternPlayer extends LanternEntityHumanoid implements AbstractSubject, Player, AbstractViewer, AbstractCommandSource {
+
+    static {
+        defaultManipulators.add(AchievementData.class);
+        defaultManipulators.add(ExperienceHolderData.class);
+        defaultManipulators.add(FlyingAbilityData.class);
+        defaultManipulators.add(FlyingData.class);
+        defaultManipulators.add(FoodData.class);
+        defaultManipulators.add(GameModeData.class);
+        defaultManipulators.add(HealthScalingData.class);
+        defaultManipulators.add(JoinData.class);
+        defaultManipulators.add(MovementSpeedData.class);
+        defaultManipulators.add(SkinData.class);
+        defaultManipulators.add(SleepingData.class);
+        defaultManipulators.add(SneakingData.class);
+        defaultManipulators.add(SprintData.class);
+        defaultManipulators.add(StatisticData.class);
+        defaultManipulators.add(SprintData.class);
+    }
 
     private final User user;
     private final LanternGameProfile gameProfile;
@@ -103,6 +140,7 @@ public class LanternPlayer extends LanternEntityHumanoid implements AbstractSubj
     private boolean sleepingIgnored;
 
     public LanternPlayer(LanternGameProfile gameProfile, Session session) {
+        super(new MemoryDataContainer(), null); // TODO: Get from storage
         this.session = session;
         this.gameProfile = gameProfile;
         // Get or create the user object
@@ -113,6 +151,21 @@ public class LanternPlayer extends LanternEntityHumanoid implements AbstractSubj
 
     public User getUserObject() {
         return this.user;
+    }
+
+    @Override
+    public EntityType getType() {
+        return EntityTypes.PLAYER;
+    }
+
+    @Override
+    public DataHolder copy() {
+        throw new IllegalArgumentException("Cannot copy player entities!");
+    }
+
+    @Override
+    public Text getTeamRepresentation() {
+        return null; //TODO: Implement
     }
 
     @Override
@@ -308,5 +361,4 @@ public class LanternPlayer extends LanternEntityHumanoid implements AbstractSubj
     public void setSleepingIgnored(boolean sleepingIgnored) {
         this.sleepingIgnored = sleepingIgnored;
     }
-
 }

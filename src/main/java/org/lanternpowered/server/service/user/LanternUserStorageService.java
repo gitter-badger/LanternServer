@@ -31,6 +31,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+
 import org.lanternpowered.server.config.user.UserEntry;
 import org.lanternpowered.server.config.user.ban.BanEntry;
 import org.lanternpowered.server.entity.living.player.LanternPlayer;
@@ -38,9 +39,10 @@ import org.lanternpowered.server.entity.living.player.LanternUser;
 import org.lanternpowered.server.game.LanternGame;
 import org.lanternpowered.server.profile.LanternGameProfile;
 import org.lanternpowered.server.profile.LanternGameProfileManager;
+import org.spongepowered.api.data.MemoryDataContainer;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.user.UserStorageService;
 
 import java.util.Collection;
@@ -60,7 +62,7 @@ public class LanternUserStorageService implements UserStorageService {
             .build();
 
     static User create(LanternGameProfile profile) {
-        final User user = new LanternUser(profile);
+        final User user = new LanternUser(new MemoryDataContainer(), profile); //TODO: user data
         userCache.put(profile.getUniqueId(), user);
         return user;
     }

@@ -415,8 +415,8 @@ public final class LanternWorldProperties implements WorldProperties {
     @Override
     public void setRaining(boolean state) {
         this.raining = state;
-        if (this.world != null && this.world.weatherUniverse != null) {
-            this.world.weatherUniverse.setRaining(state);
+        if (this.world != null) {
+            this.world.setRaining(state);
         }
     }
 
@@ -428,8 +428,8 @@ public final class LanternWorldProperties implements WorldProperties {
     @Override
     public void setRainTime(int time) {
         this.rainTime = time;
-        if (this.world != null && this.world.weatherUniverse != null) {
-            this.world.weatherUniverse.setRainTime(time);
+        if (this.world != null) {
+            this.world.setRainTime(time);
         }
     }
 
@@ -441,8 +441,8 @@ public final class LanternWorldProperties implements WorldProperties {
     @Override
     public void setThundering(boolean state) {
         this.thundering = state;
-        if (this.world != null && this.world.weatherUniverse != null) {
-            this.world.weatherUniverse.setThundering(state);
+        if (this.world != null) {
+            this.world.setThundering(state);
         }
     }
 
@@ -454,8 +454,8 @@ public final class LanternWorldProperties implements WorldProperties {
     @Override
     public void setThunderTime(int time) {
         this.thunderTime = time;
-        if (this.world != null && this.world.weatherUniverse != null) {
-            this.world.weatherUniverse.setThunderTime(time);
+        if (this.world != null) {
+            this.world.setThunderTime(time);
         }
     }
 

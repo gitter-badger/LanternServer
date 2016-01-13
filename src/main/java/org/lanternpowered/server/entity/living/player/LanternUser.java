@@ -24,10 +24,19 @@
  */
 package org.lanternpowered.server.entity.living.player;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import org.lanternpowered.server.data.LanternDataHolder;
 import org.lanternpowered.server.entity.AbstractArmorEquipable;
 import org.lanternpowered.server.game.LanternGame;
 import org.lanternpowered.server.profile.LanternGameProfile;
-import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.data.DataView;
+import org.spongepowered.api.data.persistence.InvalidDataException;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataTransactionResult;
@@ -35,7 +44,6 @@ import org.spongepowered.api.data.Property;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.DataManipulator;
 import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.persistence.InvalidDataException;
 import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.entity.living.player.Player;
@@ -44,26 +52,21 @@ import org.spongepowered.api.item.inventory.Carrier;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
-import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.context.Context;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.service.permission.SubjectCollection;
 import org.spongepowered.api.service.permission.SubjectData;
-import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.util.annotation.NonnullByDefault;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import org.spongepowered.api.util.Tristate;
+import org.spongepowered.api.command.CommandSource;
 
 @NonnullByDefault
-public class LanternUser implements AbstractArmorEquipable, User {
+public class LanternUser extends LanternDataHolder implements AbstractArmorEquipable, User {
 
     private final LanternGameProfile gameProfile;
 
-    public LanternUser(LanternGameProfile gameProfile) {
+    public LanternUser(DataView data, LanternGameProfile gameProfile) {
+        super(data);
         this.gameProfile = gameProfile;
     }
 
@@ -157,12 +160,6 @@ public class LanternUser implements AbstractArmorEquipable, User {
     }
 
     @Override
-    public Collection<DataManipulator<?, ?>> getContainers() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public <E> Optional<E> get(Key<? extends BaseValue<E>> key) {
         // TODO Auto-generated method stub
         return null;
@@ -182,8 +179,7 @@ public class LanternUser implements AbstractArmorEquipable, User {
 
     @Override
     public DataHolder copy() {
-        // TODO Auto-generated method stub
-        return null;
+        return new LanternUser(this.toContainer(), this.gameProfile);
     }
 
     @Override
@@ -235,14 +231,13 @@ public class LanternUser implements AbstractArmorEquipable, User {
 
     @Override
     public String getIdentifier() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.gameProfile.getUniqueId().toString();
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Optional<CommandSource> getCommandSource() {
-        // TODO Auto-generated method stub
-        return null;
+        return (Optional) getPlayer(); //TODO: Implement
     }
 
     @Override
@@ -262,6 +257,7 @@ public class LanternUser implements AbstractArmorEquipable, User {
         // TODO Auto-generated method stub
         return null;
     }
+
 
     @Override
     public boolean hasPermission(Set<Context> contexts, String permission) {
@@ -330,5 +326,4 @@ public class LanternUser implements AbstractArmorEquipable, User {
     public Optional<Player> getPlayer() {
         return LanternGame.get().getServer().getPlayer(this.gameProfile.getUniqueId());
     }
-
 }
